@@ -715,9 +715,72 @@ void Preprocessor::EndSourceFile() {
 IdentifierInfo *Preprocessor::LookUpIdentifierInfo(Token &Identifier) const {
   assert(!Identifier.getRawIdentifier().empty() && "No raw identifier data!");
 
+  // For Klingon mode, translate Klingon keywords to C keywords
+  StringRef IdentStr;
+  SmallString<64> TranslatedBuffer;
+  bool isTranslated = false;
+  
+  if (getLangOpts().Klingon) {
+    if (!Identifier.needsCleaning() && !Identifier.hasUCN()) {
+      IdentStr = Identifier.getRawIdentifier();
+    } else {
+      SmallString<64> IdentifierBuffer;
+      IdentStr = getSpelling(Identifier, IdentifierBuffer);
+      TranslatedBuffer = IdentifierBuffer;
+    }
+    
+    // Translate Klingon keywords to C keywords
+    StringRef Translated = llvm::StringSwitch<StringRef>(IdentStr)
+        // Control flow
+        .Case("HIja", "if")
+        .Case("ghobe", "else")
+        .Case("vangqa", "for")
+        .Case("tIq", "while")
+        .Case("ta", "do")
+        .Case("tam", "switch")
+        .Case("chen", "case")
+        .Case("mev", "break")
+        .Case("yIt", "continue")
+        .Case("chegh", "return")
+        .Case("jaH", "goto")
+        // Types
+        .Case("mI", "int")
+        .Case("qIt", "char")
+        .Case("ghurtaH", "float")
+        .Case("ghurtaH_chorghvI", "double")
+        .Case("chIm", "void")
+        .Case("nI", "long")
+        .Case("poH", "short")
+        .Case("Hutlh", "unsigned")
+        .Case("moj", "signed")
+        // Storage class
+        .Case("motlh", "static")
+        .Case("puS", "extern")
+        .Case("peq", "auto")
+        .Case("qaw", "register")
+        .Case("choH", "const")
+        .Case("choH_pagh", "volatile")
+        // Compound types
+        .Case("ghom", "struct")
+        .Case("tu", "union")
+        .Case("pong", "enum")
+        .Case("pIm_pong", "typedef")
+        // Other
+        .Case("yIq", "sizeof")
+        .Default(StringRef());
+    
+    if (!Translated.empty()) {
+      TranslatedBuffer = Translated;
+      IdentStr = TranslatedBuffer;
+      isTranslated = true;
+    }
+  }
+
   // Look up this token, see if it is a macro, or if it is a language keyword.
   IdentifierInfo *II;
-  if (!Identifier.needsCleaning() && !Identifier.hasUCN()) {
+  if (isTranslated) {
+    II = getIdentifierInfo(TranslatedBuffer);
+  } else if (!Identifier.needsCleaning() && !Identifier.hasUCN()) {
     // No cleaning needed, just use the characters from the lexed buffer.
     II = getIdentifierInfo(Identifier.getRawIdentifier());
   } else {
