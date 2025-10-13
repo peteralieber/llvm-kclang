@@ -157,3 +157,9 @@ The implementation follows these principles:
 
 This is part of the LLVM Project and is available under the Apache License v2.0 with LLVM Exceptions.
 See LICENSE.TXT for license information.
+
+## Disclaimer
+
+This is a non-commercial, fan-created work inspired by the Klingon language and the Star Trek universe. 
+All related trademarks and copyrights remain the property of their respective owners. No ownership is 
+claimed, and use is intended under fair use principles.
