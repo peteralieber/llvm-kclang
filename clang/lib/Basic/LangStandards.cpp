@@ -41,6 +41,8 @@ StringRef clang::languageToString(Language L) {
     return "HIP";
   case Language::HLSL:
     return "HLSL";
+  case Language::Klingon:
+    return "Klingon";
   }
 
   llvm_unreachable("unhandled language kind");
@@ -114,6 +116,8 @@ LangStandard::Kind clang::getDefaultLanguageStandard(clang::Language Lang,
     return LangStandard::lang_gnucxx17;
   case Language::HLSL:
     return LangStandard::lang_hlsl202x;
+  case Language::Klingon:
+    return LangStandard::lang_klingon;
   }
   llvm_unreachable("unhandled Language kind!");
 }

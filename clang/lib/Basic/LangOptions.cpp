@@ -134,6 +134,9 @@ void LangOptions::setLangDefaults(LangOptions &Opts, Language Lang,
   if (Opts.HLSL && Opts.IncludeDefaultHeader)
     Includes.push_back("hlsl.h");
 
+  // Set Klingon mode
+  Opts.Klingon = Lang == Language::Klingon;
+
   // Set OpenCL Version.
   Opts.OpenCL = Std.isOpenCL();
   if (LangStd == LangStandard::lang_opencl10)
