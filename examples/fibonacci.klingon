@@ -1,0 +1,200 @@
+// Example: Fibonacci sequence in Klingon
+// Demonstrates various language features using Klingon keywords
+
+#include <stdio.h>
+
+// Function to calculate fibonacci using iteration
+mI fibonacci(mI n) {
+  HIja (n <= 1) {
+    chegh n;
+  }
+  
+  mI a = 0;
+  mI b = 1;
+  mI temp;
+  
+  vangqa (mI i = 2; i <= n; i++) {
+    temp = a + b;
+    a = b;
+    b = temp;
+  }
+  
+  chegh b;
+}
+
+// Recursive fibonacci (less efficient but demonstrates recursion)
+mI fibonacci_recursive(mI n) {
+  HIja (n <= 1) {
+    chegh n;
+  }
+  chegh fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2);
+}
+
+// Structure to hold fibonacci stats
+ghom FibStats {
+  mI value;
+  mI position;
+};
+
+// Enum for calculation method
+pong FibMethod {
+  ITERATIVE,
+  RECURSIVE
+};
+
+// Print fibonacci numbers
+chIm print_fibonacci(mI count, pong FibMethod method) {
+  printf("Fibonacci sequence (first %d numbers):\n", count);
+  
+  vangqa (mI i = 0; i < count; i++) {
+    mI fib;
+    
+    tam (method) {
+      chen ITERATIVE:
+        fib = fibonacci(i);
+        mev;
+      chen RECURSIVE:
+        fib = fibonacci_recursive(i);
+        mev;
+    }
+    
+    printf("%d ", fib);
+    
+    HIja (i > 0 && i % 10 == 0) {
+      printf("\n");
+    }
+  }
+  printf("\n");
+}
+
+// Test different data types
+chIm test_types() {
+  qIt c = 'K';  // Klingon starts with K!
+  poH s = 42;
+  mI i = 1000;
+  nI l = 1000000L;
+  ghurtaH f = 3.14f;
+  ghurtaH_chorghvI d = 2.71828;
+  
+  printf("Types test:\n");
+  printf("char: %c\n", c);
+  printf("short: %d\n", s);
+  printf("int: %d\n", i);
+  printf("long: %ld\n", l);
+  printf("float: %f\n", f);
+  printf("double: %f\n", d);
+}
+
+// Static counter
+motlh mI call_count = 0;
+
+// Function with storage classes
+puS chIm external_function();
+
+chIm increment_counter() {
+  call_count++;
+}
+
+// Demonstrate while and do-while loops
+chIm test_loops() {
+  mI i = 0;
+  
+  // While loop
+  printf("While loop: ");
+  tIq (i < 5) {
+    printf("%d ", i);
+    i++;
+  }
+  printf("\n");
+  
+  // Do-while loop
+  printf("Do-while loop: ");
+  i = 0;
+  ta {
+    printf("%d ", i);
+    i++;
+  } tIq (i < 5);
+  printf("\n");
+}
+
+// Test break and continue
+chIm test_break_continue() {
+  printf("Testing break and continue:\n");
+  
+  vangqa (mI i = 0; i < 10; i++) {
+    HIja (i == 5) {
+      printf("Breaking at 5\n");
+      mev;
+    }
+    
+    HIja (i % 2 == 0) {
+      yIt;  // Skip even numbers
+    }
+    
+    printf("%d ", i);
+  }
+  printf("\n");
+}
+
+// Union example
+tu Number {
+  mI i;
+  ghurtaH f;
+  ghurtaH_chorghvI d;
+};
+
+// Typedef example
+pIm_pong mI Integer;
+pIm_pong ghurtaH Float;
+
+// Main function
+mI main() {
+  printf("=== Klingon C Dialect Demo ===\n\n");
+  
+  // Test fibonacci
+  printf("Fibonacci using iterative method:\n");
+  print_fibonacci(20, ITERATIVE);
+  printf("\n");
+  
+  // Test types
+  test_types();
+  printf("\n");
+  
+  // Test loops
+  test_loops();
+  printf("\n");
+  
+  // Test break/continue
+  test_break_continue();
+  printf("\n");
+  
+  // Test typedef
+  Integer x = 100;
+  Float y = 3.14f;
+  printf("Typedef test: Integer=%d, Float=%f\n", x, y);
+  printf("\n");
+  
+  // Test union
+  tu Number num;
+  num.i = 42;
+  printf("Union test: int=%d\n", num.i);
+  num.f = 3.14f;
+  printf("Union test: float=%f\n", num.f);
+  printf("\n");
+  
+  // Test sizeof
+  printf("Size of int: %zu bytes\n", yIq(mI));
+  printf("Size of FibStats: %zu bytes\n", yIq(ghom FibStats));
+  printf("\n");
+  
+  // Test static counter
+  increment_counter();
+  increment_counter();
+  increment_counter();
+  printf("Call count: %d\n", call_count);
+  printf("\n");
+  
+  printf("Qapla' (Success)!\n");
+  
+  chegh 0;
+}
