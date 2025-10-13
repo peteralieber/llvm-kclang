@@ -1,0 +1,11 @@
+// Hello World in Klingon
+// The simplest example of the Klingon dialect
+
+#include <stdio.h>
+
+mI main() {
+  printf("nuqneH! (Hello!)\n");
+  printf("This is C with Klingon keywords!\n");
+  
+  chegh 0;
+}
