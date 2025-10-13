@@ -1,0 +1,94 @@
+// RUN: %clang_cc1 -fsyntax-only -x klingon -verify %s
+// expected-no-diagnostics
+
+// Test basic Klingon keyword translation
+mI qoq(mI a, mI b) {
+  HIja (a > b) {
+    chegh a;
+  } ghobe {
+    chegh b;
+  }
+}
+
+// Test control flow keywords
+chIm test_while() {
+  mI i = 0;
+  tIq (i < 10) {
+    i++;
+  }
+}
+
+// Test do-while
+chIm test_do_while() {
+  mI i = 0;
+  ta {
+    i++;
+  } tIq (i < 5);
+}
+
+// Test for loop
+chIm test_for() {
+  vangqa (mI i = 0; i < 10; i++) {
+    HIja (i == 5) {
+      mev;
+    }
+    HIja (i == 3) {
+      yIt;
+    }
+  }
+}
+
+// Test switch-case
+chIm test_switch(mI x) {
+  tam (x) {
+    chen 1:
+      chegh;
+    chen 2:
+      chegh;
+  }
+}
+
+// Test types
+chIm test_types() {
+  qIt c = 'a';
+  poH s = 1;
+  mI i = 2;
+  nI l = 3;
+  ghurtaH f = 4.0;
+  ghurtaH_chorghvI d = 5.0;
+}
+
+// Test storage classes
+motlh mI global_var = 0;
+puS chIm external_func();
+
+// Test struct
+ghom Point {
+  mI x;
+  mI y;
+};
+
+// Test union
+tu Data {
+  mI i;
+  ghurtaH f;
+};
+
+// Test enum
+pong Color {
+  RED,
+  GREEN,
+  BLUE
+};
+
+// Test typedef
+pIm_pong mI Integer;
+
+// Test sizeof
+chIm test_sizeof() {
+  mI size = yIq(mI);
+}
+
+mI main() {
+  chegh 0;
+}
