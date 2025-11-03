@@ -732,11 +732,11 @@ IdentifierInfo *Preprocessor::LookUpIdentifierInfo(Token &Identifier) const {
     // Translate Klingon keywords to C keywords
     StringRef Translated = llvm::StringSwitch<StringRef>(IdentStr)
         // Control flow
-        .Case("HIja", "if")
-        .Case("ghobe", "else")
-        .Case("vangqa", "for")
+        .Case("HIja'", "if")
+        .Case("ghobe'", "else")
+        .Case("vangqa'", "for")
         .Case("tIq", "while")
-        .Case("ta", "do")
+        .Case("ta'", "do")
         .Case("tam", "switch")
         .Case("chen", "case")
         .Case("mev", "break")
@@ -744,12 +744,12 @@ IdentifierInfo *Preprocessor::LookUpIdentifierInfo(Token &Identifier) const {
         .Case("chegh", "return")
         .Case("jaH", "goto")
         // Types
-        .Case("mI", "int")
+        .Case("mI'", "int")
         .Case("qIt", "char")
         .Case("ghurtaH", "float")
         .Case("ghurtaH_chorghvI", "double")
         .Case("chIm", "void")
-        .Case("nI", "long")
+        .Case("nI'", "long")
         .Case("poH", "short")
         .Case("Hutlh", "unsigned")
         .Case("moj", "signed")
@@ -762,7 +762,7 @@ IdentifierInfo *Preprocessor::LookUpIdentifierInfo(Token &Identifier) const {
         .Case("choH_pagh", "volatile")
         // Compound types
         .Case("ghom", "struct")
-        .Case("tu", "union")
+        .Case("tu'", "union")
         .Case("pong", "enum")
         .Case("pIm_pong", "typedef")
         // Other

@@ -2,17 +2,17 @@
 // expected-no-diagnostics
 
 // Test basic Klingon keyword translation
-mI qoq(mI a, mI b) {
-  HIja (a > b) {
+mI' qoq(mI' a, mI' b) {
+  HIja' (a > b) {
     chegh a;
-  } ghobe {
+  } ghobe' {
     chegh b;
   }
 }
 
 // Test control flow keywords
 chIm test_while() {
-  mI i = 0;
+  mI' i = 0;
   tIq (i < 10) {
     i++;
   }
@@ -20,26 +20,26 @@ chIm test_while() {
 
 // Test do-while
 chIm test_do_while() {
-  mI i = 0;
-  ta {
+  mI' i = 0;
+  ta' {
     i++;
   } tIq (i < 5);
 }
 
 // Test for loop
 chIm test_for() {
-  vangqa (mI i = 0; i < 10; i++) {
-    HIja (i == 5) {
+  vangqa' (mI' i = 0; i < 10; i++) {
+    HIja' (i == 5) {
       mev;
     }
-    HIja (i == 3) {
+    HIja' (i == 3) {
       yIt;
     }
   }
 }
 
 // Test switch-case
-chIm test_switch(mI x) {
+chIm test_switch(mI' x) {
   tam (x) {
     chen 1:
       chegh;
@@ -50,27 +50,27 @@ chIm test_switch(mI x) {
 
 // Test types
 chIm test_types() {
-  qIt c = 'a';
+  qIt c = 65;  // Character literals not supported in Klingon mode, use integer
   poH s = 1;
-  mI i = 2;
-  nI l = 3;
+  mI' i = 2;
+  nI' l = 3;
   ghurtaH f = 4.0;
   ghurtaH_chorghvI d = 5.0;
 }
 
 // Test storage classes
-motlh mI global_var = 0;
+motlh mI' global_var = 0;
 puS chIm external_func();
 
 // Test struct
 ghom Point {
-  mI x;
-  mI y;
+  mI' x;
+  mI' y;
 };
 
 // Test union
-tu Data {
-  mI i;
+tu' Data {
+  mI' i;
   ghurtaH f;
 };
 
@@ -82,13 +82,13 @@ pong Color {
 };
 
 // Test typedef
-pIm_pong mI Integer;
+pIm_pong mI' Integer;
 
 // Test sizeof
 chIm test_sizeof() {
-  mI size = yIq(mI);
+  mI' size = yIq(mI');
 }
 
-mI main() {
+mI' main() {
   chegh 0;
 }

@@ -1975,6 +1975,11 @@ bool Lexer::LexIdentifierContinue(Token &Result, const char *CurPtr) {
       CurPtr = ConsumeChar(CurPtr, Size, Result);
       continue;
     }
+    // In Klingon mode, apostrophe is a letter (glottal stop), not a delimiter
+    if (C == '\'' && LangOpts.Klingon) {
+      CurPtr = ConsumeChar(CurPtr, Size, Result);
+      continue;
+    }
     if (C == '\\' && tryConsumeIdentifierUCN(CurPtr, Size, Result))
       continue;
     if (!isASCII(C) && tryConsumeIdentifierUTF8Char(CurPtr, Result))
@@ -4039,6 +4044,16 @@ LexStart:
 
   // C99 6.4.4: Character Constants.
   case '\'':
+    // In Klingon mode, apostrophe is a letter (glottal stop), not a delimiter.
+    // Character literals are not supported in Klingon mode.
+    if (LangOpts.Klingon) {
+      // Apostrophe at the start is an error - it can only appear within identifiers
+      if (!isLexingRawMode())
+        Diag(BufferPtr, diag::err_invalid_character)
+            << "apostrophe can only appear within identifiers in Klingon mode";
+      FormTokenWithChars(Result, CurPtr, tok::unknown);
+      return true;
+    }
     // Notify MIOpt that we read a non-whitespace/non-comment token.
     MIOpt.ReadToken();
     return LexCharConstant(Result, CurPtr, tok::char_constant);
