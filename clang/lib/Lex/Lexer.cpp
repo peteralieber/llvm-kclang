@@ -4048,6 +4048,8 @@ LexStart:
     // Character literals are not supported in Klingon mode.
     // Apostrophe can only appear within identifiers.
     if (LangOpts.Klingon) {
+      if (!isLexingRawMode())
+        Diag(BufferPtr, diag::err_klingon_char_literal);
       Kind = tok::unknown;
       break;
     }
