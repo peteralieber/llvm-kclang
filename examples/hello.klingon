@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-mI main() {
+mI' main() {
   printf("nuqneH! (Hello!)\n");
   printf("This is C with Klingon keywords!\n");
   
