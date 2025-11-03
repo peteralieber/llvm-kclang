@@ -4046,13 +4046,10 @@ LexStart:
   case '\'':
     // In Klingon mode, apostrophe is a letter (glottal stop), not a delimiter.
     // Character literals are not supported in Klingon mode.
+    // Apostrophe can only appear within identifiers.
     if (LangOpts.Klingon) {
-      // Apostrophe at the start is an error - it can only appear within identifiers
-      if (!isLexingRawMode())
-        Diag(BufferPtr, diag::err_invalid_character)
-            << "apostrophe can only appear within identifiers in Klingon mode";
-      FormTokenWithChars(Result, CurPtr, tok::unknown);
-      return true;
+      Kind = tok::unknown;
+      break;
     }
     // Notify MIOpt that we read a non-whitespace/non-comment token.
     MIOpt.ReadToken();
