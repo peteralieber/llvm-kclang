@@ -2506,6 +2506,64 @@ bool Lexer::LexCharConstant(Token &Result, const char *CurPtr,
   return true;
 }
 
+/// LexBacktickCharConstant - Lex the remainder of a backtick character constant,
+/// after having lexed the opening backtick (`). This is used in Klingon mode
+/// where apostrophes are letters, not delimiters.
+bool Lexer::LexBacktickCharConstant(Token &Result, const char *CurPtr,
+                                    tok::TokenKind Kind) {
+  // Does this character contain the \0 character?
+  const char *NulCharacter = nullptr;
+
+  char C = getAndAdvanceChar(CurPtr, Result);
+  if (C == '`') {
+    if (!isLexingRawMode() && !LangOpts.AsmPreprocessor)
+      Diag(BufferPtr, diag::ext_empty_character);
+    FormTokenWithChars(Result, CurPtr, tok::unknown);
+    return true;
+  }
+
+  // Read characters until we hit a backtick
+  while (C != '`') {
+    // Skip escaped characters.
+    if (C == '\\')
+      C = getAndAdvanceChar(CurPtr, Result);
+
+    if (C == '\n' || C == '\r' ||             // Newline.
+        (C == 0 && CurPtr-1 == BufferEnd)) {  // End of file.
+      if (!isLexingRawMode() && !LangOpts.AsmPreprocessor)
+        Diag(BufferPtr, diag::ext_unterminated_char_or_string) << 0;
+      FormTokenWithChars(Result, CurPtr-1, tok::unknown);
+      return true;
+    }
+
+    if (C == 0) {
+      if (isCodeCompletionPoint(CurPtr-1)) {
+        PP->CodeCompleteNaturalLanguage();
+        FormTokenWithChars(Result, CurPtr-1, tok::unknown);
+        cutOffLexing();
+        return true;
+      }
+
+      NulCharacter = CurPtr-1;
+    }
+    C = getAndAdvanceChar(CurPtr, Result);
+  }
+
+  // If we are in C++11, lex the optional ud-suffix.
+  if (LangOpts.CPlusPlus)
+    CurPtr = LexUDSuffix(Result, CurPtr, false);
+
+  // If a nul character existed in the character, warn about it.
+  if (NulCharacter && !isLexingRawMode())
+    Diag(NulCharacter, diag::null_in_char_or_string) << 0;
+
+  // Update the location of token as well as BufferPtr.
+  const char *TokStart = BufferPtr;
+  FormTokenWithChars(Result, CurPtr, Kind);
+  Result.setLiteralData(TokStart);
+  return true;
+}
+
 /// SkipWhitespace - Efficiently skip over a series of whitespace characters.
 /// Update BufferPtr to point to the next non-whitespace character and return.
 ///
@@ -4064,6 +4122,19 @@ LexStart:
     return LexStringLiteral(Result, CurPtr,
                             ParsingFilename ? tok::header_name
                                             : tok::string_literal);
+
+  // Backtick character literals (Klingon mode only).
+  case '`':
+    // In Klingon mode, backtick is used for character literals
+    // since apostrophe is a letter (glottal stop).
+    if (LangOpts.Klingon) {
+      // Notify MIOpt that we read a non-whitespace/non-comment token.
+      MIOpt.ReadToken();
+      return LexBacktickCharConstant(Result, CurPtr, tok::char_constant);
+    }
+    // In non-Klingon mode, backtick is not a recognized token.
+    Kind = tok::unknown;
+    break;
 
   // C99 6.4.6: Punctuators.
   case '?':

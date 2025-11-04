@@ -50,7 +50,7 @@ chIm test_switch(mI' x) {
 
 // Test types
 chIm test_types() {
-  qIt c = 65;  // Character literals not supported in Klingon mode, use integer
+  qIt c = `A`;  // Character literal with backtick
   poH s = 1;
   mI' i = 2;
   nI' l = 3;

@@ -761,6 +761,8 @@ private:
   bool LexAngledStringLiteral(Token &Result, const char *CurPtr);
   bool LexCharConstant       (Token &Result, const char *CurPtr,
                               tok::TokenKind Kind);
+  bool LexBacktickCharConstant(Token &Result, const char *CurPtr,
+                              tok::TokenKind Kind);
   bool LexEndOfFile          (Token &Result, const char *CurPtr);
   bool SkipWhitespace        (Token &Result, const char *CurPtr,
                               bool &TokAtPhysicalStartOfLine);
