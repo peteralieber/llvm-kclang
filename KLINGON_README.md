@@ -16,14 +16,14 @@ See [files/SPEC.md](files/SPEC.md) for the complete list of keyword replacements
 ### Examples
 
 #### Control Flow
-- `if` → `HIja` (yes condition)
-- `else` → `ghobe` (no, otherwise)
-- `for` → `vangqa` (repeatedly act)
+- `if` → `HIja'` (yes condition)
+- `else` → `ghobe'` (no, otherwise)
+- `for` → `vangqa'` (repeatedly act)
 - `while` → `tIq` (be enduring)
 - `return` → `chegh` (return/retreat)
 
 #### Types
-- `int` → `mI` (number)
+- `int` → `mI'` (number)
 - `char` → `qIt` (symbol/character)
 - `float` → `ghurtaH` (floating)
 - `void` → `chIm` (be empty)
@@ -52,18 +52,18 @@ clang -x klingon myfile.klingon -o myprogram
 Here's a simple max function in Klingon:
 
 ```c
-mI qoq(mI a, mI b) {
-  HIja (a > b) {
+mI' qoq(mI' a, mI' b) {
+  HIja' (a > b) {
     chegh a;
-  } ghobe {
+  } ghobe' {
     chegh b;
   }
 }
 
-mI main() {
-  mI x = 10;
-  mI y = 20;
-  mI result = qoq(x, y);
+mI' main() {
+  mI' x = 10;
+  mI' y = 20;
+  mI' result = qoq(x, y);
   chegh 0;
 }
 ```
@@ -144,6 +144,31 @@ ninja check-clang-parser
 ninja check-clang
 ```
 
+## Important Notes
+
+### Apostrophe as a Letter
+
+In authentic Klingon, the apostrophe (') is a **letter** representing a glottal stop, not punctuation. This has important implications:
+
+- **Keywords with apostrophes**: Many Klingon keywords include apostrophes: `HIja'` (if), `ghobe'` (else), `mI'` (int), `ta'` (do)
+- **Identifiers with apostrophes**: You can use apostrophes within identifiers: `pa'` (room), `Qapla'` (success)
+- **Character literals NOT supported**: Since single quotes are reserved for the glottal stop, character literals like `'a'` are not available in Klingon mode
+- **Use integer literals instead**: For character values, use integer literals: `65` instead of `'A'`, `97` instead of `'a'`
+- **String literals work normally**: Double quotes still work for strings: `"Hello, world!"`
+
+### Example with apostrophes:
+```c
+mI' compute_value() {
+  mI' result = 0;
+  vangqa' (mI' i = 0; i < 10; i++) {
+    HIja' (i > 5) {
+      result = result + i;
+    }
+  }
+  chegh result;
+}
+```
+
 ## Design Principles
 
 The implementation follows these principles:
@@ -152,6 +177,7 @@ The implementation follows these principles:
 2. **Zero impact on standard C**: When not in Klingon mode, there is no performance or behavioral impact
 3. **Full C compatibility**: Klingon code is just C with different keywords - all C semantics are preserved
 4. **Clean separation**: The translation happens at the lexer level, so the rest of the compiler sees standard C
+5. **Authentic Klingon**: Uses proper Klingon spelling with apostrophes representing glottal stops
 
 ## License
 

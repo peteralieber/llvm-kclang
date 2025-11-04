@@ -59,9 +59,9 @@ if (getLangOpts().Klingon) {
   
   // Translate Klingon keywords to C keywords
   StringRef Translated = llvm::StringSwitch<StringRef>(IdentStr)
-      .Case("HIja", "if")
-      .Case("ghobe", "else")
-      .Case("mI", "int")
+      .Case("HIja'", "if")
+      .Case("ghobe'", "else")
+      .Case("mI'", "int")
       // ... etc
       .Default(StringRef());
   
@@ -155,11 +155,45 @@ When adding new C keywords:
 2. Update StringSwitch in Preprocessor.cpp
 3. Add test case to klingon_keywords.klingon
 
+## Apostrophe Support
+
+In authentic Klingon, the apostrophe (') represents a glottal stop and is a letter of the alphabet, not punctuation. To support this:
+
+### Lexer Changes
+**File Modified:** `clang/lib/Lex/Lexer.cpp`
+
+1. **Identifier continuation**: Added apostrophe as a valid identifier continuation character in Klingon mode:
+   ```cpp
+   // In Klingon mode, apostrophe is a letter (glottal stop), not a delimiter
+   if (C == '\'' && LangOpts.Klingon) {
+     CurPtr = ConsumeChar(CurPtr, Size, Result);
+     continue;
+   }
+   ```
+
+2. **Character literal handling**: Disabled character literals in Klingon mode since single quotes are reserved for the glottal stop:
+   ```cpp
+   case '\'':
+     if (LangOpts.Klingon) {
+       if (!isLexingRawMode())
+         Diag(BufferPtr, diag::err_klingon_char_literal);
+       Kind = tok::unknown;
+       break;
+     }
+   ```
+
+### Impact
+- Apostrophes can now appear within identifiers: `HIja'`, `ghobe'`, `mI'`, `ta'`, etc.
+- Character literals (`'a'`) are not supported in Klingon mode
+- Use integer literals instead: `65` for character 'A'
+- String literals with double quotes remain fully supported: `"Hello"`
+
 ## Known Limitations
 
 1. Preprocessor directives remain in English (`#include`, `#define`, etc.)
 2. Standard library identifiers remain in English (`printf`, `stdio.h`, etc.)
 3. No translation for C++ keywords (future enhancement)
+4. Character literals not supported in Klingon mode (use integer literals instead)
 
 ## Conclusion
 
@@ -169,3 +203,4 @@ The implementation achieves the goals of:
 - ✅ Full isolation behind language option
 - ✅ No corruption of performance or debug data
 - ✅ Clean, maintainable code
+- ✅ Authentic Klingon language support with apostrophes
