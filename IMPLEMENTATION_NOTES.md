@@ -184,16 +184,55 @@ In authentic Klingon, the apostrophe (') represents a glottal stop and is a lett
 
 ### Impact
 - Apostrophes can now appear within identifiers: `HIja'`, `ghobe'`, `mI'`, `ta'`, etc.
-- Character literals (`'a'`) are not supported in Klingon mode
-- Use integer literals instead: `65` for character 'A'
+- Character literals with single quotes (`'a'`) are not supported in Klingon mode
+- **Backtick character literals**: Use single opening backtick for character literals (no closing backtick): `` `a ``, `` `\n ``, `` `K ``
 - String literals with double quotes remain fully supported: `"Hello"`
+
+### Backtick Character Literals
+
+**Files Modified:**
+- `clang/include/clang/Lex/Lexer.h`
+- `clang/lib/Lex/Lexer.cpp`
+- `clang/include/clang/Basic/DiagnosticLexKinds.td`
+
+To provide character literal support while preserving apostrophes as letters, backtick (`) is used as an opening delimiter for character constants. The literal is **implicitly closed** after reading one character or escape sequence:
+
+1. **Lexer function**: Added `LexBacktickCharConstant()` with implicit closing:
+   ```cpp
+   bool Lexer::LexBacktickCharConstant(Token &Result, const char *CurPtr,
+                                       tok::TokenKind Kind) {
+     // Reads opening backtick
+     // Reads one character or escape sequence
+     // Implicitly closes - no closing backtick required
+     // Supports all standard escape sequences plus \s for space
+   }
+   ```
+
+2. **Lexer switch case**: Added backtick handling in `LexTokenInternal()`:
+   ```cpp
+   case '`':
+     if (LangOpts.Klingon) {
+       MIOpt.ReadToken();
+       return LexBacktickCharConstant(Result, CurPtr, tok::char_constant);
+     }
+     Kind = tok::unknown;
+     break;
+   ```
+
+3. **Updated diagnostic**: The error message for single quote usage now suggests the backtick alternative.
+
+**Usage:**
+- Character literals (no closing backtick): `` `a ``, `` `Z ``, `` `0 ``
+- Escape sequences: `` `\n ``, `` `\t ``, `` `\\ ``, `` `\' ``, `` `\s ``
+- All standard C escape sequences are supported, plus `\s` for space
+- Examples: `qIt c = `a;`, `qIt space = `\s;`, `qIt newline = `\n;`
 
 ## Known Limitations
 
 1. Preprocessor directives remain in English (`#include`, `#define`, etc.)
 2. Standard library identifiers remain in English (`printf`, `stdio.h`, etc.)
 3. No translation for C++ keywords (future enhancement)
-4. Character literals not supported in Klingon mode (use integer literals instead)
+4. Backtick character literals only work in Klingon mode (not available in standard C mode)
 
 ## Conclusion
 

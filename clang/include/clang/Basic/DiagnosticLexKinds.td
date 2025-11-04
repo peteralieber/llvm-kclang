@@ -339,7 +339,10 @@ def err_lexing_numeric : Error<"failure when lexing a numeric literal">;
 def err_placeholder_in_source : Error<"editor placeholder in source file">;
 def err_klingon_char_literal : Error<
   "character literals are not supported in Klingon mode; "
-  "apostrophe is a letter (glottal stop) and can only appear within identifiers">;
+  "apostrophe is a letter (glottal stop) and can only appear within identifiers. "
+  "Use backtick (`) for character literals, e.g., `a instead of 'a'">;
+def err_unterminated_backtick_char : Error<
+  "incomplete backtick character literal">;
 
 //===----------------------------------------------------------------------===//
 // Preprocessor Diagnostics

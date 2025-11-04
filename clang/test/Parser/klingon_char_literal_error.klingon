@@ -1,0 +1,17 @@
+// RUN: %clang_cc1 -fsyntax-only -x klingon -verify %s
+
+// Test that single quote character literals are rejected in Klingon mode
+
+mI' test_single_quote_error() {
+  // This should produce an error - single quotes not allowed
+  qIt a = 'a'; // expected-error {{character literals are not supported in Klingon mode; apostrophe is a letter (glottal stop) and can only appear within identifiers. Use backtick (`) for character literals, e.g., `a instead of 'a'}}
+  
+  // But backticks should work (note: no closing backtick)
+  qIt b = `b; // This is OK
+  
+  chegh 0;
+}
+
+mI' main() {
+  chegh test_single_quote_error();
+}
