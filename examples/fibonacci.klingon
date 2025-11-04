@@ -69,7 +69,7 @@ chIm print_fibonacci(mI' count, pong FibMethod method) {
 
 // Test different data types
 chIm test_types() {
-  qIt c = `K`;  // Klingon starts with K!
+  qIt c = `K;  // Klingon starts with K! (no closing backtick)
   poH s = 42;
   mI' i = 1000;
   nI' l = 1000000L;

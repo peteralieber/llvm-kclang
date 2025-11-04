@@ -95,13 +95,17 @@ int max(int a, int b) {
 **Important Note:** In Klingon mode, the single quote (apostrophe, ') is NOT a string delimiter. The apostrophe is a letter in the Klingon alphabet representing a glottal stop, and it can appear within identifiers and keywords (e.g., `HIja'`, `ghobe'`, `ta'`, `mI'`).
 
 - **String literals:** Use double quotes (") only for string literals: `"Hello, world!"`
-- **Character literals:** Use backticks (`) for character literals: `` `a` ``, `` `\n` ``, `` `Z` ``
-  - Example: `qIt letter = `K`;`
-  - Example with escape sequences: `qIt newline = `\n`;`
-  - All standard C escape sequences are supported: `\n`, `\t`, `\\`, `\"`, `\'`, etc.
+- **Character literals:** Use backticks (`) for character literals (no closing backtick): `` `a ``, `` `\n ``, `` `Z ``
+  - Example: `qIt letter = `K;`
+  - Example with escape sequences: `qIt newline = `\n;`
+  - Space character: Use `\s` escape sequence: `qIt space = `\s;`
+  - All standard C escape sequences are supported: `\n`, `\t`, `\\`, `\"`, `\'`, `\s`, etc.
+  - The literal is **implicitly closed** after reading one character or escape sequence
+  - No closing backtick is required or expected
 
 The backtick syntax was chosen because:
 - It's visually distinct from both single and double quotes
 - It's available on standard keyboards
 - It doesn't conflict with any existing Klingon syntax
 - It clearly indicates a single character literal
+- The implicit closing makes the syntax clean and unambiguous

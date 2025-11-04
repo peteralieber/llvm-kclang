@@ -185,7 +185,7 @@ In authentic Klingon, the apostrophe (') represents a glottal stop and is a lett
 ### Impact
 - Apostrophes can now appear within identifiers: `HIja'`, `ghobe'`, `mI'`, `ta'`, etc.
 - Character literals with single quotes (`'a'`) are not supported in Klingon mode
-- **Backtick character literals**: Use backticks for character literals: `` `a` ``, `` `\n` ``, `` `K` ``
+- **Backtick character literals**: Use single opening backtick for character literals (no closing backtick): `` `a ``, `` `\n ``, `` `K ``
 - String literals with double quotes remain fully supported: `"Hello"`
 
 ### Backtick Character Literals
@@ -195,14 +195,16 @@ In authentic Klingon, the apostrophe (') represents a glottal stop and is a lett
 - `clang/lib/Lex/Lexer.cpp`
 - `clang/include/clang/Basic/DiagnosticLexKinds.td`
 
-To provide character literal support while preserving apostrophes as letters, backtick (`) is used as the delimiter for character constants:
+To provide character literal support while preserving apostrophes as letters, backtick (`) is used as an opening delimiter for character constants. The literal is **implicitly closed** after reading one character or escape sequence:
 
-1. **Lexer function**: Added `LexBacktickCharConstant()` similar to `LexCharConstant()` but using backticks:
+1. **Lexer function**: Added `LexBacktickCharConstant()` with implicit closing:
    ```cpp
    bool Lexer::LexBacktickCharConstant(Token &Result, const char *CurPtr,
                                        tok::TokenKind Kind) {
-     // Lexes character content until closing backtick
-     // Supports all standard escape sequences
+     // Reads opening backtick
+     // Reads one character or escape sequence
+     // Implicitly closes - no closing backtick required
+     // Supports all standard escape sequences plus \s for space
    }
    ```
 
@@ -220,9 +222,10 @@ To provide character literal support while preserving apostrophes as letters, ba
 3. **Updated diagnostic**: The error message for single quote usage now suggests the backtick alternative.
 
 **Usage:**
-- Character literals: `` `a` ``, `` `Z` ``, `` `0` ``
-- Escape sequences: `` `\n` ``, `` `\t` ``, `` `\\` ``, `` `\'` ``
-- All standard C escape sequences are supported
+- Character literals (no closing backtick): `` `a ``, `` `Z ``, `` `0 ``
+- Escape sequences: `` `\n ``, `` `\t ``, `` `\\ ``, `` `\' ``, `` `\s ``
+- All standard C escape sequences are supported, plus `\s` for space
+- Examples: `qIt c = `a;`, `qIt space = `\s;`, `qIt newline = `\n;`
 
 ## Known Limitations
 

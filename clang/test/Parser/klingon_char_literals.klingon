@@ -2,40 +2,41 @@
 // expected-no-diagnostics
 
 // Test backtick character literals in Klingon mode
+// Note: Backtick literals have only an opening backtick, no closing delimiter
 
 mI' test_basic_char_literals() {
-  // Basic ASCII characters
-  qIt a = `a`;
-  qIt b = `b`;
-  qIt zero = `0`;
-  qIt nine = `9`;
-  qIt space = ` `;
-  qIt newline = `\n`;
-  qIt tab = `\t`;
+  // Basic ASCII characters (note: no closing backtick)
+  qIt a = `a;
+  qIt b = `b;
+  qIt zero = `0;
+  qIt nine = `9;
+  qIt space = `\s;  // Use \s for space since space is implicit delimiter
+  qIt newline = `\n;
+  qIt tab = `\t;
   
   // Escaped characters
-  qIt backslash = `\\`;
-  qIt backtick = `\``;
-  qIt single_quote = `\'`;
-  qIt double_quote = `\"`;
+  qIt backslash = `\\;
+  qIt backtick = `\`;
+  qIt single_quote = `\';
+  qIt double_quote = `\";
   
   // Special characters
-  qIt exclaim = `!`;
-  qIt at = `@`;
-  qIt hash = `#`;
-  qIt dollar = `$`;
-  qIt percent = `%`;
+  qIt exclaim = `!;
+  qIt at = `@;
+  qIt hash = `#;
+  qIt dollar = `$;
+  qIt percent = `%;
   
   // Use in comparisons
-  HIja' (a == `a`) {
+  HIja' (a == `a) {
     chegh 1;
   }
   
   // Use in switch statements
   tam (a) {
-    chen `a`:
+    chen `a:
       chegh 1;
-    chen `b`:
+    chen `b:
       chegh 2;
   }
   
@@ -44,24 +45,24 @@ mI' test_basic_char_literals() {
 
 // Test character literals in expressions
 chIm test_char_expressions() {
-  qIt upper = `A`;
+  qIt upper = `A;
   qIt lower = upper + 32; // Convert to lowercase
   
   // Character arrays
-  qIt str[5] = {`H`, `e`, `l`, `l`, `o`};
+  qIt str[5] = {`H, `e, `l, `l, `o};
   
   // Character arithmetic
-  vangqa' (qIt c = `a`; c <= `z`; c++) {
+  vangqa' (qIt c = `a; c <= `z; c++) {
     // Process each letter
   }
 }
 
 // Test with const
 chIm test_const_char() {
-  choH qIt LETTER_A = `A`;
-  choH qIt LETTER_Z = `Z`;
-  choH qIt DIGIT_0 = `0`;
-  choH qIt DIGIT_9 = `9`;
+  choH qIt LETTER_A = `A;
+  choH qIt LETTER_Z = `Z;
+  choH qIt DIGIT_0 = `0;
+  choH qIt DIGIT_9 = `9;
 }
 
 mI' main() {

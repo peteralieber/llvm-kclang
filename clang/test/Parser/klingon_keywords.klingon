@@ -50,7 +50,7 @@ chIm test_switch(mI' x) {
 
 // Test types
 chIm test_types() {
-  qIt c = `A`;  // Character literal with backtick
+  qIt c = `A;  // Character literal with backtick (no closing backtick)
   poH s = 1;
   mI' i = 2;
   nI' l = 3;

@@ -4,10 +4,10 @@
 
 mI' test_single_quote_error() {
   // This should produce an error - single quotes not allowed
-  qIt a = 'a'; // expected-error {{character literals are not supported in Klingon mode; apostrophe is a letter (glottal stop) and can only appear within identifiers. Use backtick (`) for character literals, e.g., `a` instead of 'a'}}
+  qIt a = 'a'; // expected-error {{character literals are not supported in Klingon mode; apostrophe is a letter (glottal stop) and can only appear within identifiers. Use backtick (`) for character literals, e.g., `a instead of 'a'}}
   
-  // But backticks should work
-  qIt b = `b`; // This is OK
+  // But backticks should work (note: no closing backtick)
+  qIt b = `b; // This is OK
   
   chegh 0;
 }

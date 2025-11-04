@@ -152,22 +152,24 @@ In authentic Klingon, the apostrophe (') is a **letter** representing a glottal 
 
 - **Keywords with apostrophes**: Many Klingon keywords include apostrophes: `HIja'` (if), `ghobe'` (else), `mI'` (int), `ta'` (do)
 - **Identifiers with apostrophes**: You can use apostrophes within identifiers: `pa'` (room), `Qapla'` (success)
-- **Character literals use backticks**: Since single quotes are reserved for the glottal stop, character literals use backticks instead: `` `a` ``, `` `\n` ``, `` `K` ``
+- **Character literals use backticks**: Since single quotes are reserved for the glottal stop, character literals use a single opening backtick with no closing delimiter: `` `a ``, `` `\n ``, `` `K ``
 - **String literals work normally**: Double quotes still work for strings: `"Hello, world!"`
 
 ### Character Literals with Backticks
 
-To avoid conflicts with apostrophes in identifiers, Klingon mode uses backticks (`) for character literals:
+To avoid conflicts with apostrophes in identifiers, Klingon mode uses backticks (`) for character literals. The literal has **only an opening backtick** and is implicitly closed after reading one character or escape sequence:
 
 ```c
-qIt letter = `K`;          // Character literal for 'K'
-qIt newline = `\n`;        // Escape sequences work
-qIt tab = `\t`;            // Tab character
-qIt quote = `\'`;          // Single quote as a character
-qIt backslash = `\\`;      // Backslash character
+qIt letter = `K;           // Character literal for 'K' (no closing backtick)
+qIt newline = `\n;         // Escape sequences work
+qIt tab = `\t;             // Tab character
+qIt quote = `\';           // Single quote as a character
+qIt backslash = `\\;       // Backslash character
+qIt space = `\s;           // Space character using \s escape
+qIt backtick = `\`;        // Escaped backtick
 ```
 
-All standard C escape sequences are supported within backtick literals.
+All standard C escape sequences are supported, plus `\s` for space (since space would otherwise act as a delimiter).
 
 ### Example with apostrophes:
 ```c
