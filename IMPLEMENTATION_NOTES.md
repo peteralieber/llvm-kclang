@@ -175,12 +175,10 @@ In authentic Klingon, the apostrophe (') represents a glottal stop and is a lett
    ```cpp
    case '\'':
      if (LangOpts.Klingon) {
-       // Apostrophe at the start is an error - it can only appear within identifiers
        if (!isLexingRawMode())
-         Diag(BufferPtr, diag::err_invalid_character)
-             << "apostrophe can only appear within identifiers in Klingon mode";
-       FormTokenWithChars(Result, CurPtr, tok::unknown);
-       return true;
+         Diag(BufferPtr, diag::err_klingon_char_literal);
+       Kind = tok::unknown;
+       break;
      }
    ```
 
