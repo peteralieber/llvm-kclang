@@ -1,0 +1,47 @@
+// RUN: %clang_cc1 -fsyntax-only -x klingon -verify %s
+
+// Test edge cases for backtick character literals in Klingon mode
+
+mI' test_empty_char() {
+  qIt c1 = ``; // expected-error {{empty character constant}}
+  chegh 0;
+}
+
+mI' test_unterminated_char() {
+  qIt c2 = `a // expected-error {{expected ';' after expression}}
+  // Note: The above will fail to find the closing backtick
+  chegh 0;
+}
+
+mI' test_escaped_backtick() {
+  qIt backtick = `\``;  // Escaped backtick - should work
+  chegh 0;
+}
+
+mI' test_multichar() {
+  // Multi-character literals are implementation-defined but should parse
+  qIt multi = `ab`;  // expected-warning {{multi-character character constant}}
+  chegh 0;
+}
+
+mI' test_all_escapes() {
+  qIt newline = `\n`;
+  qIt tab = `\t`;
+  qIt carriage = `\r`;
+  qIt backslash = `\\`;
+  qIt single_quote = `\'`;
+  qIt double_quote = `\"`;
+  qIt question = `\?`;
+  qIt alert = `\a`;
+  qIt backspace = `\b`;
+  qIt formfeed = `\f`;
+  qIt vtab = `\v`;
+  qIt null_char = `\0`;
+  qIt octal = `\101`;  // 'A'
+  qIt hex = `\x41`;    // 'A'
+  chegh 0;
+}
+
+mI' main() {
+  chegh 0;
+}
