@@ -184,16 +184,52 @@ In authentic Klingon, the apostrophe (') represents a glottal stop and is a lett
 
 ### Impact
 - Apostrophes can now appear within identifiers: `HIja'`, `ghobe'`, `mI'`, `ta'`, etc.
-- Character literals (`'a'`) are not supported in Klingon mode
-- Use integer literals instead: `65` for character 'A'
+- Character literals with single quotes (`'a'`) are not supported in Klingon mode
+- **Backtick character literals**: Use backticks for character literals: `` `a` ``, `` `\n` ``, `` `K` ``
 - String literals with double quotes remain fully supported: `"Hello"`
+
+### Backtick Character Literals
+
+**Files Modified:**
+- `clang/include/clang/Lex/Lexer.h`
+- `clang/lib/Lex/Lexer.cpp`
+- `clang/include/clang/Basic/DiagnosticLexKinds.td`
+
+To provide character literal support while preserving apostrophes as letters, backtick (`) is used as the delimiter for character constants:
+
+1. **Lexer function**: Added `LexBacktickCharConstant()` similar to `LexCharConstant()` but using backticks:
+   ```cpp
+   bool Lexer::LexBacktickCharConstant(Token &Result, const char *CurPtr,
+                                       tok::TokenKind Kind) {
+     // Lexes character content until closing backtick
+     // Supports all standard escape sequences
+   }
+   ```
+
+2. **Lexer switch case**: Added backtick handling in `LexTokenInternal()`:
+   ```cpp
+   case '`':
+     if (LangOpts.Klingon) {
+       MIOpt.ReadToken();
+       return LexBacktickCharConstant(Result, CurPtr, tok::char_constant);
+     }
+     Kind = tok::unknown;
+     break;
+   ```
+
+3. **Updated diagnostic**: The error message for single quote usage now suggests the backtick alternative.
+
+**Usage:**
+- Character literals: `` `a` ``, `` `Z` ``, `` `0` ``
+- Escape sequences: `` `\n` ``, `` `\t` ``, `` `\\` ``, `` `\'` ``
+- All standard C escape sequences are supported
 
 ## Known Limitations
 
 1. Preprocessor directives remain in English (`#include`, `#define`, etc.)
 2. Standard library identifiers remain in English (`printf`, `stdio.h`, etc.)
 3. No translation for C++ keywords (future enhancement)
-4. Character literals not supported in Klingon mode (use integer literals instead)
+4. Backtick character literals only work in Klingon mode (not available in standard C mode)
 
 ## Conclusion
 

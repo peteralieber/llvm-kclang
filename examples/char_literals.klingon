@@ -1,0 +1,40 @@
+// Character Literals Example in Klingon
+// Demonstrates backtick character literals
+
+#include <stdio.h>
+
+mI' main() {
+  // Basic character literals using backticks
+  qIt letter = `K`;
+  qIt digit = `7`;
+  qIt space = ` `;
+  
+  printf("Letter: %c\n", letter);
+  printf("Digit: %c\n", digit);
+  printf("Space: '%c'\n", space);
+  
+  // Escape sequences work too
+  qIt newline = `\n`;
+  qIt tab = `\t`;
+  qIt backslash = `\\`;
+  
+  printf("Escape sequences:%c", newline);
+  printf("Tab:%cworks!\n", tab);
+  
+  // Character array
+  qIt greeting[] = {`Q`, `a`, `p`, `l`, `a`, `'`, 0};
+  printf("Greeting: %s\n", greeting);
+  
+  // Character comparison
+  qIt test = `A`;
+  HIja' (test >= `A` && test <= `Z`) {
+    printf("'%c' is uppercase\n", test);
+  }
+  
+  // Character arithmetic
+  qIt lower = `a`;
+  qIt upper = lower - 32;  // Convert to uppercase
+  printf("Lowercase '%c' -> Uppercase '%c'\n", lower, upper);
+  
+  chegh 0;
+}
